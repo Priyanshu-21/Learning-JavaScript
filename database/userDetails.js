@@ -1,43 +1,60 @@
-// Create a basic SignUp & SignIn controller with DB Schema's
+// Adding controller sigin & signup with database connection
 import express from 'express'; 
-import mongoose from 'mongoose';
-import userSchema from './userModel.js';
+import mongoose from 'mongoose'; 
 import { } from 'dotenv/config'; 
+import zod from 'zod'; 
+import userSchema from './userModel.js'; 
 
 const app = express(); 
 
-app.use(express.json()); 
+// Defining the structure of userDetails 
+const userDetails = zod.object({
+    username: zod.string().min(3).max(6), 
+    email: zod.string().email(), 
+    password: zod.string().min(6).max(10), 
+}); 
+
+app.use(express.json()); // Application Middleware
 
 try {
-
-    // Define connection String 
+    // Database connection 
     const db = mongoose.connect(`mongodb+srv://${process.env.user}:${process.env.password}@cluster0.j0sx7.mongodb.net/`); 
 
-    // Define Model
-    const users = mongoose.model('user', userSchema); 
+    const users = mongoose.model('users', userSchema); // make a collection (table)
 
     // Controller 
     app.post('/signup', async function (req, res) {
-        const username = req.body.username; 
-        const email = req.body.email; 
-        const password = req.body.password; 
+        
+        const {username, email, password} = req.body;  
 
-        // save the data in user Table 
-        const saveUser = new users({
+        // Zod validation 
+        const validation = userDetails.safeParse({username, email, password}); 
+
+        if(!validation.success) {
+            res.status(400).json({
+                msg: "There is some issue in validation"
+            }); 
+            return; 
+        }
+
+        const saveData = new users({
             username, 
             email, 
             password, 
         }); 
 
-        await saveUser.save(); 
+        // save data of users 
+        await saveData.save(); 
 
         res.status(200).json({
-            saveUser, 
-        })
+            msg: "User has been successfully Signed Up", 
+        }); 
     }); 
 
-    app.listen(3000);
+    app.listen(3000); 
 
-} catch(error) {
-    console.log(error); 
+} catch(err) {
+    throw new err; 
 }
+
+// Next Task: - Add JWT & give token to sessions | user exist then sigup with other username
