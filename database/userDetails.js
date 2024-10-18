@@ -94,7 +94,6 @@ try {
 
         res.status(200).json({
             msg: "Congrats, you have access for this page", 
-            payload: global.userPayload, 
         });
 
     });
@@ -105,4 +104,4 @@ try {
     throw new err; 
 }
 
-// After validation of token: - Server is in hung state, need to check on this. 
+// Understood, Intro to DB & Servers in JavaScript 
