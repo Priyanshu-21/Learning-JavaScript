@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<!--UnderStanding how to access Elements in DOM-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessing Elements</title>
+</head>
+<body>
+    <script>
+        function accessElement() {
+            const createElement = document.createElement('h1'); 
+            const addValue = document.createTextNode('Hi!! Priyanshu'); 
+            createElement.appendChild(addValue); 
+            document.body.appendChild(createElement); 
+        }
+    </script>
+    <button type="button" onclick="accessElement()">Click Me!</button>
+</body>
+</html>
