@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "lib": ["ES2020"],
+      "target": "es6",
+      "module": "ES2020",
+      "esModuleInterop": true,
+      "moduleResolution": "node"
+    },
+    "include": ["src"]
+}

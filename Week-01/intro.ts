@@ -1,1 +1,0 @@
-// Introduction to learning typeScript 
