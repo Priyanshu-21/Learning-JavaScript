@@ -97,15 +97,54 @@ const mergeSort = (arr: number[]) => {
     return merge(left, right); 
 }
 
+// 5. Quick Sort: 
+
+function partition (low: number, high: number, arr: number[]): [number, number] {
+    // Pivot approach 
+    const pivot = arr[Math.floor((low + high) / 2)]; 
+    let eq = low; 
+    let lt = low; 
+    let gt = high; 
+
+    while (eq <= gt) {
+        if (arr[eq] < pivot) {
+            // Swap arr[eq] with arr[lt]
+            [arr[eq], arr[lt]] = [arr[lt], arr[eq]]; 
+            lt++; 
+            eq++;  
+        } else if (arr[eq] > pivot) {
+            //Swap arr[eq] with arr[gt]
+            [arr[eq], arr[gt]] = [arr[gt], arr[eq]];
+            gt--;  
+        } else {
+            eq++; 
+        }
+    }
+    return [lt, gt]; 
+}
+const quickSort = (arr: number[]):number[] => {
+    const n = arr.length; 
+    if (n > 1) {
+        const result = partition(0, n - 1, arr); 
+        const lt = result[0]; 
+        const gt = result[1]; 
+
+        // Recursive approach 
+        quickSort(arr.slice(0, lt)); 
+        quickSort(arr.slice(gt + 1, n)); 
+    } 
+    return arr; 
+}
+
 // const arr = [12, 10, 0, 9, -1, 5, 11, -3]; 
-// const result = mergeSort(arr); 
+// const result = quickSort(arr); 
 // console.log(result); 
 
 try {
     const data = fs.readFileSync("sample.txt", "utf8"); 
     const numberData = JSON.parse(data);
     const start = new Date().getTime(); 
-    const result = mergeSort(numberData); 
+    const result = quickSort(numberData); 
     const end = new Date().getTime(); 
     console.log("Sorted array: ", result); 
     console.log("Time Taken to sort array: ", (end - start)); 
@@ -123,4 +162,4 @@ try {
     console.error(err); 
 }
 
-// TODO: Quick Sort. 
+// TODO: Quick Sort: Error in approach (need to check on this) 
