@@ -1,0 +1,155 @@
+// Sorting Array (Comparison Sort)
+import fs from "node:fs";
+// 1. Bubble Sort: 
+const bubbleSort = (arr) => {
+    const n = arr.length;
+    let swapped;
+    for (let i = 0; i < n - 1; i++) {
+        swapped = false;
+        for (let j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                let tmp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = tmp;
+                swapped = true;
+            }
+        }
+        if (!swapped)
+            break;
+    }
+    return arr;
+};
+// 2. Selection Sort: 
+const selectionSort = (arr) => {
+    const n = arr.length;
+    for (let i = 0; i < n; i++) {
+        let minValue = Number.MAX_VALUE;
+        let k = 0; // keep track of swapping value 
+        for (let j = i + 1; j < n; j++) {
+            // find smallest element 
+            if (arr[j] <= minValue) {
+                minValue = arr[j];
+                k = j;
+            }
+        }
+        if (minValue <= arr[i]) {
+            let temp = arr[i];
+            arr[i] = minValue;
+            arr[k] = temp;
+        }
+    }
+    return arr;
+};
+// 3. Insertion Sort: 
+const insertionSort = (arr) => {
+    const n = arr.length;
+    for (let i = 1; i < n; i++) {
+        for (let j = 0; j < i; j++) {
+            if (arr[i] <= arr[j]) {
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+    }
+    return arr;
+};
+// 4. Merge Sort:
+function merge(left, right) {
+    let i = 0;
+    let j = 0;
+    const result = [];
+    while (i < left.length && j < right.length) {
+        if (left[i] <= right[j]) {
+            result.push(left[i]);
+            i++;
+        }
+        else {
+            result.push(right[j]);
+            j++;
+        }
+    }
+    // for remaining elements (if any)
+    while (i < left.length) {
+        result.push(left[i]);
+        i++;
+    }
+    while (j < right.length) {
+        result.push(right[j]);
+        j++;
+    }
+    return result;
+}
+const mergeSort = (arr) => {
+    const n = arr.length;
+    if (n === 1)
+        return arr;
+    const mid = n / 2;
+    const left = mergeSort(arr.slice(0, mid));
+    const right = mergeSort(arr.slice(mid, n));
+    return merge(left, right);
+};
+// 5. Quick Sort: 
+function partition(low, high, arr) {
+    // Pivot approach 
+    const pivot = arr[Math.floor((low + high) / 2)];
+    let eq = low;
+    let lt = low;
+    let gt = high;
+    while (eq <= gt) {
+        if (arr[eq] < pivot) {
+            // Swap arr[eq] with arr[lt]
+            [arr[eq], arr[lt]] = [arr[lt], arr[eq]];
+            lt++;
+            eq++;
+        }
+        else if (arr[eq] > pivot) {
+            //Swap arr[eq] with arr[gt]
+            [arr[eq], arr[gt]] = [arr[gt], arr[eq]];
+            gt--;
+        }
+        else {
+            eq++;
+        }
+    }
+    return [lt, gt];
+}
+const quickSort = (arr) => {
+    const n = arr.length;
+    if (n > 1) {
+        const result = partition(0, n - 1, arr);
+        const lt = result[0];
+        const gt = result[1];
+        // Recursive approach 
+        quickSort(arr.slice(0, lt));
+        quickSort(arr.slice(gt + 1, n));
+    }
+    return arr;
+};
+// const arr = [12, 10, 0, 9, -1, 5, 11, -3]; 
+// const result = quickSort(arr); 
+// console.log(result); 
+try {
+    const data = fs.readFileSync("sample.txt", "utf8");
+    const numberData = JSON.parse(data);
+    const start = new Date().getTime();
+    const result = quickSort(numberData);
+    const end = new Date().getTime();
+    console.log("Sorted array: ", result);
+    console.log("Time Taken to sort array: ", (end - start));
+    // Save resulted array in file 
+    const stringData = JSON.stringify(result);
+    fs.writeFile("resut.txt", stringData, (error) => {
+        if (error) {
+            console.log(error);
+        }
+        else {
+            console.log("Sorted Array Saved to result file");
+        }
+    });
+}
+catch (err) {
+    console.error(err);
+}
+// TODO: Quick Sort: Error in approach (need to check on this) 
+//# sourceMappingURL=sortingAlgo.js.map
